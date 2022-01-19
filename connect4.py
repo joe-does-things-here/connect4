@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk 
 from tkinter import messagebox
 import random
-#todo: column 5/6?, get the board array fixed, get scan functin working, modularise?
+#todo: make a pleyer object(name,colour,score,move(True/False) line 53, get the board array working, get scan function working, modular?
 
 root = tk.Tk()
 root.title("Connect 4")
@@ -10,8 +10,9 @@ game = ttk.Frame(root)
 splashScreen = ttk.Frame(root)
 colour = ["red","yellow"]
 nextColour = "red"
-global P1Colour,P2Colour #made global for use in functions
+global P1Colour,P2Colour,nextPlayer #made global for use in functions
 
+nextPlayer = "hi"
 X0Ylevel = 0 #used to know the correct Y level to "drop" the counter on the grid
 X1Ylevel = 0
 X2Ylevel = 0
@@ -49,8 +50,8 @@ def play(user,user2):
     else:
         login()
 
-def login():
-    global P1Colour, P2Colour
+def login(): #make the player object in here?
+    global P1Colour, P2Colour, P1name, P2name
     P1Colour =random.choice(colour)
     colour.remove(P1Colour)
     P2Colour = colour
@@ -159,8 +160,12 @@ button4 = ttk.Button(game, text="drop",command=lambda: drop4(X4Ylevel))
 button4.grid(row=6,column=4,sticky="W")
 button5 = ttk.Button(game, text="drop",command=lambda: drop5(X5Ylevel)) 
 button5.grid(row=6,column=5,sticky="W")
-button6 = ttk.Button(game, text="drop",command=lambda: drop5(X6Ylevel)) 
+button6 = ttk.Button(game, text="drop",command=lambda: drop6(X6Ylevel)) 
 button6.grid(row=6,column=6,sticky="W")
+
+text1 = ttk.Label(game, text="\nnext player: "+nextPlayer)
+text1.grid(row=7,column=0)
+
 game.pack
 
 def drop0(level):
@@ -585,7 +590,6 @@ def drop5(level):
 
 def drop6(level):
     global nextColour,X6Ylevel
-    print(X6Ylevel)
     if level == 0:
         if nextColour == "red":
             X6Y5.create_oval(6,6,50,50, fill="red")
