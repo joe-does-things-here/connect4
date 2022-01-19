@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk 
 from tkinter import messagebox
 import random
-#todo: get the board array fixed, get scan functin working, modularise?
+#todo: column 5/6?, get the board array fixed, get scan functin working, modularise?
 
 root = tk.Tk()
 root.title("Connect 4")
@@ -585,6 +585,7 @@ def drop5(level):
 
 def drop6(level):
     global nextColour,X6Ylevel
+    print(X6Ylevel)
     if level == 0:
         if nextColour == "red":
             X6Y5.create_oval(6,6,50,50, fill="red")
