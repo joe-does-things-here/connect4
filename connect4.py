@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk 
 from tkinter import messagebox
 import random
-#todo: make a pleyer object(name,colour,score,move(True/False) line 53, get the board array working, get scan function working, modular?
+#todo: utalise the player object, get the board array working (replace with 2D array), get scan function working, modular?
 
 root = tk.Tk()
 root.title("Connect 4")
@@ -28,7 +28,18 @@ board = ["x","x","x","x","x","x","x",
          "x","x","x","x","x","x","x",
          "x","x","x","x","x","x","x",]
 P1name = tk.StringVar()
-P2name = tk.StringVar() 
+P2name = tk.StringVar()
+
+class Player:
+  def __init__(self, name, colour, score, move):
+    self.name = name
+    self.colour = colour
+    self.score = score
+    self.move = move
+
+PlayerOne = Player("","",0,False)
+PlayerTwo = Player("","",0,False)
+
 def drawSplashScreen():
     text = ttk.Label(splashScreen,text="Player 1 enter your name: ")
     text.grid(row=1,column=0,sticky="W")
@@ -48,13 +59,17 @@ def play(user,user2):
     if user == "" or user2 =="": 
         messagebox.showerror('Input fields cannot be left blank')
     else:
+        PlayerOne.name = user
+        PlayerTwo.name = user2
         login()
 
 def login(): #make the player object in here?
     global P1Colour, P2Colour, P1name, P2name
     P1Colour =random.choice(colour)
+    PlayerOne.colour = P1Colour
     colour.remove(P1Colour)
     P2Colour = colour
+    PlayerTwo.colour = P2Colour
     splashScreen.pack_forget()
     game.pack()
 
@@ -170,6 +185,7 @@ game.pack
 
 def drop0(level):
     global nextColour,X0Ylevel
+    print(PlayerOne.name,PlayerOne.score)
     if level == 0:
         if nextColour == "red":
             X0Y5.create_oval(6,6,50,50, fill="red")
