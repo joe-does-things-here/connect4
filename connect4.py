@@ -2,17 +2,16 @@ import tkinter as tk
 from tkinter import ttk 
 from tkinter import messagebox
 import random
-#todo: utalise the player object, get the board array working (replace with 2D array), get scan function working, modular?
+#todo: make it so red goes first, make it flip each round, make array for values, modularise?, connect
 
 root = tk.Tk()
 root.title("Connect 4")
 game = ttk.Frame(root)
 splashScreen = ttk.Frame(root)
 colour = ["red","yellow"]
-nextColour = "red"
-global P1Colour,P2Colour,nextPlayer #made global for use in functions
 
-nextPlayer = "hi"
+global X0Ylevel, X1Ylevel, X2Ylevel, X3Ylevel, X4Ylevel, X5Ylevel, X6Ylevel,P1Colour,P2Colour #made global for use in functions
+
 X0Ylevel = 0 #used to know the correct Y level to "drop" the counter on the grid
 X1Ylevel = 0
 X2Ylevel = 0
@@ -20,26 +19,10 @@ X3Ylevel = 0
 X4Ylevel = 0
 X5Ylevel = 0
 X6Ylevel = 0
+round = 0
 
-board = ["x","x","x","x","x","x","x",
-         "x","x","x","x","x","x","x",
-         "x","x","x","x","x","x","x",
-         "x","x","x","x","x","x","x",
-         "x","x","x","x","x","x","x",
-         "x","x","x","x","x","x","x",]
 P1name = tk.StringVar()
-P2name = tk.StringVar()
-
-class Player:
-  def __init__(self, name, colour, score, move):
-    self.name = name
-    self.colour = colour
-    self.score = score
-    self.move = move
-
-PlayerOne = Player("","",0,False)
-PlayerTwo = Player("","",0,False)
-
+P2name = tk.StringVar() 
 def drawSplashScreen():
     text = ttk.Label(splashScreen,text="Player 1 enter your name: ")
     text.grid(row=1,column=0,sticky="W")
@@ -59,17 +42,13 @@ def play(user,user2):
     if user == "" or user2 =="": 
         messagebox.showerror('Input fields cannot be left blank')
     else:
-        PlayerOne.name = user
-        PlayerTwo.name = user2
         login()
 
-def login(): #make the player object in here?
-    global P1Colour, P2Colour, P1name, P2name
-    P1Colour =random.choice(colour)
-    PlayerOne.colour = P1Colour
+def login():
+    global P1Colour, P2Colour
+    P1Colour =random.choice(colour) #choses a colour at random
     colour.remove(P1Colour)
-    P2Colour = colour
-    PlayerTwo.colour = P2Colour
+    P2Colour = colour[0] #asigns the other colour
     splashScreen.pack_forget()
     game.pack()
 
@@ -165,517 +144,61 @@ X6Y5.grid(row=5, column=6)
 
 button = ttk.Button(game, text="drop",command=lambda: drop0(X0Ylevel)) #using lambda so the functions don't run automatically
 button.grid(row=6,column=0,sticky="W") 
-button1 = ttk.Button(game, text="drop",command=lambda: drop1(X1Ylevel)) 
+button1 = ttk.Button(game, text="drop", command=lambda: drop1(X1Ylevel)) 
 button1.grid(row=6,column=1,sticky="W")
-button2 = ttk.Button(game, text="drop",command=lambda: drop2(X2Ylevel)) 
+button2 = ttk.Button(game, text="drop", command=lambda: drop2(X2Ylevel)) 
 button2.grid(row=6,column=2,sticky="W")
-button3 = ttk.Button(game, text="drop",command=lambda: drop3(X3Ylevel)) 
+button3 = ttk.Button(game, text="drop", command=lambda: drop3(X3Ylevel)) 
 button3.grid(row=6,column=3,sticky="W")
-button4 = ttk.Button(game, text="drop",command=lambda: drop4(X4Ylevel)) 
+button4 = ttk.Button(game, text="drop", command=lambda: drop4(X4Ylevel)) 
 button4.grid(row=6,column=4,sticky="W")
-button5 = ttk.Button(game, text="drop",command=lambda: drop5(X5Ylevel)) 
+button5 = ttk.Button(game, text="drop", command=lambda: drop5(X5Ylevel)) 
 button5.grid(row=6,column=5,sticky="W")
-button6 = ttk.Button(game, text="drop",command=lambda: drop6(X6Ylevel)) 
+button6 = ttk.Button(game, text="drop", command=lambda: drop5(X6Ylevel)) 
 button6.grid(row=6,column=6,sticky="W")
-
-text1 = ttk.Label(game, text="\nnext player: "+nextPlayer)
-text1.grid(row=7,column=0)
-
 game.pack
 
 def drop0(level):
-    global nextColour,X0Ylevel
-    print(PlayerOne.name,PlayerOne.score)
+    global P1Colour
     if level == 0:
-        if nextColour == "red":
-            X0Y5.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X0Y5.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
+        global X0Ylevel
+        X0Y4.create_oval(6,6,50,50)
         X0Ylevel = X0Ylevel+1
-
     elif level == 1:
-        if nextColour == "red":
-            X0Y4.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X0Y4.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
+        X0Y4.create_oval(6,6,50,50)
         X0Ylevel = X0Ylevel+1
-
     elif level == 2:
-        if nextColour == "red":
-            X0Y3.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X0Y3.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
+        X0Y3.create_oval(6,6,50,50)
         X0Ylevel = X0Ylevel+1
-    
     elif level == 3:
-        if nextColour == "red":
-            X0Y2.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X0Y2.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
+        X0Y2.create_oval(6,6,50,50)
         X0Ylevel = X0Ylevel+1
-
     elif level == 4:
-        if nextColour == "red":
-            X0Y1.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X0Y1.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
+        X0Y1.create_oval(6,6,50,50)
         X0Ylevel = X0Ylevel+1
-
     elif level == 5:
-        if nextColour == "red":
-            X0Y0.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X0Y0.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
+        X0Y0.create_oval(6,6,50,50)
         X0Ylevel = X0Ylevel+1
     else:
-        pass
+        print("ok")
 
 def drop1(level):
-    global nextColour,X1Ylevel
-    if level == 0:
-        if nextColour == "red":
-            X1Y5.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X1Y5.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X1Ylevel = X1Ylevel+1
-
-    elif level == 1:
-        if nextColour == "red":
-            X1Y4.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X1Y4.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X1Ylevel = X1Ylevel+1
-
-    elif level == 2:
-        if nextColour == "red":
-            X1Y3.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X1Y3.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X1Ylevel = X1Ylevel+1
-    
-    elif level == 3:
-        if nextColour == "red":
-            X1Y2.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X1Y2.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X1Ylevel = X1Ylevel+1
-
-    elif level == 4:
-        if nextColour == "red":
-            X1Y1.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X1Y1.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X1Ylevel = X1Ylevel+1
-
-    elif level == 5:
-        if nextColour == "red":
-            X1Y0.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X1Y0.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X1Ylevel = X1Ylevel+1
-    else:
-        pass
+    print("1")
 
 def drop2(level):
-    global nextColour,X2Ylevel
-    if level == 0:
-        if nextColour == "red":
-            X2Y5.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X2Y5.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X2Ylevel = X2Ylevel+1
+    print("2")
 
-    elif level == 1:
-        if nextColour == "red":
-            X2Y4.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X2Y4.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X2Ylevel = X2Ylevel+1
-
-    elif level == 2:
-        if nextColour == "red":
-            X2Y3.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X2Y3.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X2Ylevel = X2Ylevel+1
-    
-    elif level == 3:
-        if nextColour == "red":
-            X2Y2.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X2Y2.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X2Ylevel = X2Ylevel+1
-
-    elif level == 4:
-        if nextColour == "red":
-            X2Y1.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X2Y1.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X2Ylevel = X2Ylevel+1
-
-    elif level == 5:
-        if nextColour == "red":
-            X2Y0.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X2Y0.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X2Ylevel = X2Ylevel+1
-    else:
-        pass
-
-def drop3(level): 
-    global nextColour,X3Ylevel
-    if level == 0:
-        if nextColour == "red":
-            X3Y5.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X3Y5.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X3Ylevel = X3Ylevel+1
-
-    elif level == 1:
-        if nextColour == "red":
-            X3Y4.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X3Y4.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X3Ylevel = X3Ylevel+1
-
-    elif level == 2:
-        if nextColour == "red":
-            X3Y3.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X3Y3.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X3Ylevel = X3Ylevel+1
-    
-    elif level == 3:
-        if nextColour == "red":
-            X3Y2.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X3Y2.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X3Ylevel = X3Ylevel+1
-
-    elif level == 4:
-        if nextColour == "red":
-            X3Y1.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X3Y1.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X3Ylevel = X3Ylevel+1
-
-    elif level == 5:
-        if nextColour == "red":
-            X3Y0.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X3Y0.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X3Ylevel = X3Ylevel+1
-    else:
-        pass
+def drop3(level):
+    print("3")
 
 def drop4(level):
-    global nextColour,X4Ylevel
-    if level == 0:
-        if nextColour == "red":
-            X4Y5.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X4Y5.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X4Ylevel = X4Ylevel+1
-
-    elif level == 1:
-        if nextColour == "red":
-            X4Y4.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X4Y4.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X4Ylevel = X4Ylevel+1
-
-    elif level == 2:
-        if nextColour == "red":
-            X4Y3.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X4Y3.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X4Ylevel = X4Ylevel+1
-    
-    elif level == 3:
-        if nextColour == "red":
-            X4Y2.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X4Y2.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X4Ylevel = X4Ylevel+1
-
-    elif level == 4:
-        if nextColour == "red":
-            X4Y1.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X4Y1.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X4Ylevel = X4Ylevel+1
-
-    elif level == 5:
-        if nextColour == "red":
-            X4Y0.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X4Y0.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X4Ylevel = X4Ylevel+1
-    else:
-        pass
+    print("4")
 
 def drop5(level):
-    global nextColour,X5Ylevel
-    if level == 0:
-        if nextColour == "red":
-            X5Y5.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X5Y5.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X5Ylevel = X5Ylevel+1
-
-    elif level == 1:
-        if nextColour == "red":
-            X5Y4.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X5Y4.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X5Ylevel = X5Ylevel+1
-
-    elif level == 2:
-        if nextColour == "red":
-            X5Y3.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X5Y3.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X5Ylevel = X5Ylevel+1
-    
-    elif level == 3:
-        if nextColour == "red":
-            X5Y2.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X5Y2.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X5Ylevel = X5Ylevel+1
-
-    elif level == 4:
-        if nextColour == "red":
-            X5Y1.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X5Y1.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X5Ylevel = X5Ylevel+1
-
-    elif level == 5:
-        if nextColour == "red":
-            X5Y0.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X5Y0.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X5Ylevel = X5Ylevel+1
-    else:
-        pass
+    print("5")
 
 def drop6(level):
-    global nextColour,X6Ylevel
-    if level == 0:
-        if nextColour == "red":
-            X6Y5.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X6Y5.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X6Ylevel = X6Ylevel+1
-
-    elif level == 1:
-        if nextColour == "red":
-            X6Y4.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X6Y4.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X6Ylevel = X6Ylevel+1
-
-    elif level == 2:
-        if nextColour == "red":
-            X6Y3.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X6Y3.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X6Ylevel = X6Ylevel+1
-    
-    elif level == 3:
-        if nextColour == "red":
-            X6Y2.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X6Y2.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X6Ylevel = X6Ylevel+1
-
-    elif level == 4:
-        if nextColour == "red":
-            X6Y1.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X6Y1.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X6Ylevel = X6Ylevel+1
-
-    elif level == 5:
-        if nextColour == "red":
-            X6Y0.create_oval(6,6,50,50, fill="red")
-            board[35] = "R"
-            nextColour = "yellow"
-        else:
-            X6Y0.create_oval(6,6,50,50, fill="yellow")
-            board[35] = "Y"
-            nextColour = "red"
-        X6Ylevel = X6Ylevel+1
-    else:
-        pass
-
-def scan():
-    print("yeah")
+    print("6")
 
 drawSplashScreen()
 root.mainloop()
